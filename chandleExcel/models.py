@@ -9,7 +9,7 @@ from django.db import models
 
 
 class StorageFileLocal(models.Model):
-    excelFile=models.FileField(upload_to="excelFile")
+    excelFile = models.FileField(upload_to="excelFile")
 
     class Meta:
         managed = False
@@ -172,7 +172,8 @@ class DrillingExhibitionSingleProducts(models.Model):
     conversion_time = models.CharField(db_column='Conversion_time', max_length=255, blank=True, null=True)  # Field name made lowercase.
     primary_key_id = models.AutoField(db_column='Primary_key_ID', primary_key=True)  # Field name made lowercase.
     import_time = models.DateTimeField(db_column='Import_time',auto_now_add=True)  # Field name made lowercase.
-
+    product_name = models.CharField(db_column='Product_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    shop_name = models.CharField(db_column='Shop_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
     class Meta:
         managed = False
         db_table = 'drilling_exhibition_single_products'
@@ -207,6 +208,8 @@ class DrillingExhibitionWholeStore(models.Model):
     conversion_time = models.CharField(db_column='Conversion_time', max_length=255, blank=True, null=True)  # Field name made lowercase.
     primary_key_id = models.AutoField(db_column='Primary_key_ID', primary_key=True)  # Field name made lowercase.
     import_time = models.DateTimeField(db_column='Import_time',auto_now_add=True)  # Field name made lowercase.
+    product_name = models.CharField(db_column='Product_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    shop_name = models.CharField(db_column='Shop_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -217,6 +220,8 @@ class SuperRecommendation(models.Model):
     date = models.CharField(max_length=255, blank=True, null=True)
     plan = models.CharField(max_length=255, blank=True, null=True)
     unit = models.CharField(max_length=255, blank=True, null=True)
+    originality_id = models.CharField(db_column='Originality_ID', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    number_of_collection_stores= models.CharField(db_column='Number_of_Collection_Stores', max_length=255, blank=True,null=True)  # Field name made lowercase.
     originality = models.CharField(db_column='Originality', max_length=255, blank=True, null=True)  # Field name made lowercase.
     effective_display = models.CharField(db_column='Effective_display', max_length=255, blank=True, null=True)  # Field name made lowercase.
     number_of_valid_clicks = models.CharField(db_column='Number_of_valid_clicks', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -248,6 +253,8 @@ class SuperRecommendation(models.Model):
     return_on_investment = models.CharField(db_column='Return_on_investment', max_length=255, blank=True, null=True)  # Field name made lowercase.
     conversion_time = models.CharField(db_column='Conversion_time', max_length=255, blank=True, null=True)  # Field name made lowercase.
     import_time = models.DateTimeField(db_column='Import_time',blank=True,auto_now_add=True)  # Field name made lowercase.
+    product_name = models.CharField(db_column='Product_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    shop_name = models.CharField(db_column='Shop_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

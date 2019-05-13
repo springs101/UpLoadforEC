@@ -12,6 +12,7 @@ import time
 import datetime
 from xlrd import xldate_as_tuple
 import csv
+import platform
 # Create your views here.
 
 import xlrd
@@ -233,14 +234,31 @@ def filter_excel(workbook, type,column_name=0):
             for i in range(0, len(columns)):
                 key = getkeyvalue(resCom['data'],columns[i])
                 if type=='钻展-单品' and key=='time' or type=='钻展-全店' and key=='time':
-                    row_object[key] = changeXlrdTimeToDate(row[i])  # 表头与数据对应
+                    row_object[key] = changeXlrdTimeToDate(row[i])  # 转换时间
                 else:
                     row_object[key] = row[i]
 
             if type=='钻展-单品' or type=='钻展-全店':
                 row_object["Conversion_time"] = getchangetime(MinDate, changeXlrdTimeToDate(row[3]))
+                typeobj=gettypeName(row[1],row[0],row[2])
+                if typeobj==None:
+                    return '产品名称不在【胶原,酵素,益生菌,玛咖,牡蛎】内'
+                for key, values in typeobj.items():
+                  row_object["Product_name"] =key
+                  row_object["Shop_name"] =values
+            elif type=='超级推荐':
+                typeobj = gettypeName(row[2],row[4])
+                if typeobj == None:
+                    return '产品名称不在【胶原,酵素,益生菌,玛咖,牡蛎】内'
+                for key, values in typeobj.items():
+                    row_object["Product_name"] = key
+                    row_object["Shop_name"] = values
+                row_object["Conversion_time"] = getchangetime(MinDate, row[0])
             else:
                 row_object["Conversion_time"] = getchangetime(MinDate, row[0])
+
+
+
             excel_list.append(row_object)
 
     outlist=[]
@@ -262,19 +280,46 @@ def filter_excel(workbook, type,column_name=0):
             print(err)
 
     return 'ok'
+def gettypeName(creativeName1,creativeName2={},creativeName3={}):
+    typelist={'胶原':'姿美堂旗舰店','酵素':'姿美堂旗舰店','益生菌':'姿美堂旗舰店','玛咖':'京姿美堂旗舰店','牡蛎':'京姿美堂旗舰店',}
+    for key,values in typelist.items():
+        if key in creativeName1:
+            obj={key:values}
+            return obj
+    for key,values in typelist.items():
+        if key in creativeName2:
+            obj={key:values}
+            return obj
+    for key,values in typelist.items():
+        if key in creativeName3:
+            obj={key:values}
+            return obj
+
+    return {'待定':'待定'}
 def compareHead(srource,type):
     obj=models.DownloadMysql.objects.filter(download_table=type)
 
     if not obj.exists():
        msg = {'status': "在download_table未发现内容"}
        return msg
-    if not obj.__len__() == len(srource)+3:
-        msg = {'status': "上传表的字段和表定义字段数量不合"}
-        return msg
+
+    if type=='直通车':
+        if not obj.__len__() == len(srource)+3:
+           msg = {'status': "上传表的字段和表定义字段数量不合"}
+           return msg
+    elif type=='超级推荐':
+        if not obj.__len__() == len(srource)+5:
+           msg = {'status': "上传表的字段和表定义字段数量不合"}
+           return msg
+    else:
+        if not obj.__len__() == len(srource) + 5:
+           msg = {'status': "上传表的字段和表定义字段数量不合"}
+           return msg
+
     for line in obj:
         if not line.download_column in srource:
-            if not line.download_column in ['主键ID','导入时间','转化时间']:
-               msg = {'status': "【"+line.download_column+"】"+'该字段为在表中定义'}
+            if not line.download_column in ['主键ID','导入时间','转化时间','产品名称','店铺名称']:
+               msg = {'status': "【"+line.download_column+"】"+'该字段未在表中定义'}
                return msg
     data=list(obj.values())
     msg={'status':'ok','data':data}
@@ -346,7 +391,13 @@ def filter_excel_sort(workbook, column_name=0, by_name='Sheet0'):
 def IdentifyFileExist(fileName):
     (filepath, tempfilename) = os.path.split(fileName);
     (shotname, extension) = os.path.splitext(tempfilename);
-    newfilepath = filepath + "\\"+"excelFile"+"\\"+shotname+extension
+    sysstr = platform.system()
+    if (sysstr == "Windows"):
+        print("Call Windows tasks")
+        newfilepath = filepath + "\\" + "excelFile" + "\\" + shotname + extension
+    elif (sysstr == "Linux"):
+        print("Call Linux tasks")
+        newfilepath = filepath + "//"+"excelFile"+"//"+shotname+extension
     print("检查文件："+newfilepath)
     if os.path.exists(newfilepath):
         return True
@@ -359,7 +410,9 @@ def changeList(excel_list,type):
             newobj=models.SuperRecommendation(date= val['date'],\
 plan= val['plan'],\
 unit= val['unit'],\
-originality= val['Originality'],\
+originality= val['Originality'], \
+originality_id=val['Originality_ID'], \
+number_of_collection_stores=val['Number_of_Collection_Stores'], \
 effective_display= val['Effective_display'],\
 number_of_valid_clicks= val['Number_of_valid_clicks'],\
 thousands_of_exhibition_costs= val['Thousands_of_exhibition_costs'],\
@@ -388,7 +441,9 @@ transaction_order_amount= val['Transaction_order_amount'],\
 display_conversion_rate= val['Display_conversion_rate'],\
 click_conversion_rate= val['Click_Conversion_Rate'],\
 return_on_investment= val['Return_on_investment'],\
-conversion_time= val['Conversion_time'])
+conversion_time= val['Conversion_time'],\
+product_name = val['Product_name'], \
+shop_name = val['Shop_name'])
             newlist.append(newobj)
         return newlist
     elif type=='直通车':
@@ -452,7 +507,9 @@ transaction_order_quantity= val['Transaction_Order_Quantity'],\
 transaction_order_amount= val['Transaction_order_amount'],\
 click_conversion= val['Click_conversion'],\
 return_on_investment= val['Return_on_investment'],\
-conversion_time= val['Conversion_time'])
+conversion_time= val['Conversion_time'], \
+product_name=val['Product_name'],\
+shop_name=val['Shop_name'])
         # for val in excel_list:
         #  for key in val.keys():
         #      print(str(key).lower()+"= val['"+key+"'],\\")
@@ -486,7 +543,9 @@ click_conversion= val['Click_conversion'],\
 return_on_investment= val['Return_on_investment'],\
 action_volume= val['Action_volume'],\
 action_cost= val['Action_cost'],\
-conversion_time= val['Conversion_time'])
+conversion_time= val['Conversion_time'],\
+product_name = val['Product_name'], \
+shop_name = val['Shop_name'])
         # for val in excel_list:
         #  for key in val.keys():
         #      print(str(key).lower()+"= val['"+key+"'],\\")
