@@ -281,7 +281,7 @@ def filter_excel(workbook, type, column_name=0):
     outlist = changeList(excel_list, type)
     if type == '超级推荐':
         try:
-            ##models.SuperRecommendationCopy1.objects.bulk_create(outlist)##测试开发用
+            # models.SuperRecommendationCopy1.objects.bulk_create(outlist)##测试开发用
             models.SuperRecommendation.objects.bulk_create(outlist)
         except Exception as err:
             print(err)
@@ -502,7 +502,7 @@ def changeList(excel_list, type):
                                                 return_on_investment=val['Return_on_investment'],
                                                 conversion_time=val['Conversion_time'],
                                                 product_name=val['Product_name'],
-                                                shop_name=val['Shop_name'],pre_sale_order_volume=val['Pre_sale_order_volume'],pre_sale_amount=val['Pre_sale_amount'])
+                                                shop_name=val['Shop_name'], pre_sale_order_volume=val['Pre_sale_order_volume'], pre_sale_amount=val['Pre_sale_amount'])
             newlist.append(newobj)
         return newlist
     elif type == '直通车':
