@@ -255,11 +255,60 @@ class SuperRecommendation(models.Model):
     import_time = models.DateTimeField(db_column='Import_time',blank=True,auto_now_add=True)  # Field name made lowercase.
     product_name = models.CharField(db_column='Product_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
     shop_name = models.CharField(db_column='Shop_name', max_length=255, blank=True,null=True)  # Field name made lowercase.
+    pre_sale_order_volume = models.CharField(db_column='Pre_sale_order_volume', max_length=255, blank=True,
+                                             null=True)  # Field name made lowercase.
+    pre_sale_amount = models.CharField(db_column='Pre_sale_amount', max_length=255, blank=True,
+                                       null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'super_recommendation'
+class SuperRecommendationCopy1(models.Model):
+    date = models.CharField(max_length=255, blank=True, null=True)
+    plan = models.CharField(max_length=255, blank=True, null=True)
+    unit = models.CharField(max_length=255, blank=True, null=True)
+    originality = models.CharField(db_column='Originality', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    effective_display = models.CharField(db_column='Effective_display', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    number_of_valid_clicks = models.CharField(db_column='Number_of_valid_clicks', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    thousands_of_exhibition_costs = models.CharField(db_column='Thousands_of_exhibition_costs', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    consume = models.CharField(max_length=255, blank=True, null=True)
+    click_the_unit_price = models.CharField(db_column='Click_the_unit_price', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    click_through_rate = models.CharField(db_column='Click_through_rate', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    lead_in_the_store = models.CharField(db_column='Lead_in_the_store', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    lead_in_rate = models.CharField(db_column='Lead_in_rate', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    number_of_guided_shopkeepers = models.CharField(db_column='Number_of_guided_shopkeepers', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    number_of_sneakers_guided_into_stores = models.CharField(db_column='Number_of_sneakers_guided_into_stores', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    directing_divers_into_stores = models.CharField(db_column='Directing_divers_into_stores', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    deep_store_entry = models.CharField(db_column='Deep_Store_Entry', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    average_access_time = models.CharField(db_column='Average_access_time', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    average_number_of_pages_accessed = models.CharField(db_column='Average_number_of_pages_accessed', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pay_attention_to_store_volume = models.CharField(db_column='Pay_attention_to_store_volume', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    new_passenger_acquisition = models.CharField(db_column='New_passenger_acquisition', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    new_customer_acquisition_rate = models.CharField(db_column='New_customer_acquisition_rate', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pull_new_cost = models.CharField(db_column='Pull_new_cost', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pull_new_consumption = models.CharField(db_column='Pull_new_consumption', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    collection_of_baby_numbers = models.CharField(db_column='Collection_of_Baby_Numbers', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    add_the_number_of_shopping_carts = models.CharField(db_column='Add_the_number_of_shopping_carts', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    take_orders = models.CharField(db_column='Take_orders', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    take_the_order_amount = models.CharField(db_column='Take_the_order_amount', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    transaction_order_quantity = models.CharField(db_column='Transaction_Order_Quantity', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    transaction_order_amount = models.CharField(db_column='Transaction_order_amount', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    display_conversion_rate = models.CharField(db_column='Display_conversion_rate', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    click_conversion_rate = models.CharField(db_column='Click_Conversion_Rate', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    return_on_investment = models.CharField(db_column='Return_on_investment', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    conversion_time = models.CharField(db_column='Conversion_time', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    primary_key_id = models.AutoField(db_column='Primary_key_ID', primary_key=True)  # Field name made lowercase.
+    import_time = models.DateTimeField(db_column='Import_time', blank=True,auto_now_add=True)  # Field name made lowercase.
+    number_of_collection_stores = models.CharField(db_column='Number_of_Collection_Stores', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    originality_id = models.CharField(db_column='Originality_ID', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    product_name = models.CharField(db_column='Product_name', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    shop_name = models.CharField(db_column='Shop_name', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pre_sale_order_volume = models.CharField(db_column='Pre_sale_order_volume', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    pre_sale_amount = models.CharField(db_column='Pre_sale_amount', max_length=255, blank=True, null=True)  # Field name made lowercase.
 
+    class Meta:
+        managed = False
+        db_table = 'super_recommendation_copy1'
 
 class TbSycmQsDpztJzmt(models.Model):
     tjrq = models.CharField(max_length=50, blank=True, null=True)
