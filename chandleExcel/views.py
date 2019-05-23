@@ -164,6 +164,8 @@ def filter_cvs(cvs_reader, fpath):
     except Exception as err:
         return err
     MinDate = getMinTime(listFile, setType)
+    if MinDate==None:
+        return '上传表的日期不连续或者少于7日！'
 
     rander_reader = csv.reader(open(fpath, encoding='utf-8'))
     table_header = []
@@ -239,6 +241,9 @@ def filter_excel(workbook, type, column_name=0):
     listFile = filter_excel_sort(workbook)
     MinDate = getMinTime(listFile, type)
 
+    if MinDate == None:
+        return '上传表的日期不连续或者少于7日！'
+
     total_rows = table.nrows  # 拿到总共行数
     # 某一行数据 ['姓名', '用户名', '联系方式', '密码']
     columns = table.row_values(column_name)
@@ -281,7 +286,7 @@ def filter_excel(workbook, type, column_name=0):
     outlist = changeList(excel_list, type)
     if type == '超级推荐':
         try:
-            # models.SuperRecommendationCopy1.objects.bulk_create(outlist)##测试开发用
+            ##models.SuperRecommendationCopy1.objects.bulk_create(outlist)##测试开发用
             models.SuperRecommendation.objects.bulk_create(outlist)
         except Exception as err:
             print(err)
@@ -305,6 +310,7 @@ def gettypeName(creativeName1, creativeName2={}, creativeName3={}):
         '胶原': '姿美堂旗舰店',
         '酵素': '姿美堂旗舰店',
         '益生菌': '姿美堂旗舰店',
+        '奶昔': '姿美堂旗舰店',
         '玛咖': '京姿美堂旗舰店',
         '牡蛎': '京姿美堂旗舰店',
     }
@@ -386,28 +392,101 @@ def getMinTime(listdic, type):
             key=lambda e: e.__getitem__('时间'),
             reverse=False)
         newdate = changeXlrdTimeToDate(newlist[0]['时间'])
-        return newdate
+        if identifySqDate(newlist,type):
+           return newdate
+        else:
+           return None
     elif type == '钻展-全店':
         newlist = sorted(
             listdic,
             key=lambda e: e.__getitem__('时间'),
             reverse=False)
         newdate = changeXlrdTimeToDate(newlist[0]['时间'])
-        return newdate
+        if identifySqDate(newlist, type):
+            return newdate
+        else:
+            return None
     elif type == '直通车':
         newlist = sorted(
             listdic,
             key=lambda e: e.__getitem__('\ufeff日期'),
             reverse=False)
         newdate = newlist[0]['\ufeff日期']
-        return newdate
+        if identifySqDate(newlist, type):
+            return newdate
+        else:
+            return None
     else:
         newlist = sorted(
             listdic,
             key=lambda e: e.__getitem__('日期'),
             reverse=False)
-        return newlist[0]['日期']
+        if identifySqDate(newlist, type):
+            return newlist[0]['日期']
+        else:
+            return None
 
+def identifySqDate(list,type):
+    if type == '钻展-单品':
+        for i in range(0,len(list)-1):
+            if not datapanduan(changeXlrdTimeToDate(list[i]['时间']), changeXlrdTimeToDate(list[i + 1]['时间'])):
+                return False
+
+        if datapanduan7(changeXlrdTimeToDate(list[0]['时间']), changeXlrdTimeToDate(list[len(list) - 1]['时间'])):
+            return True
+        else:
+            return False
+
+    elif type == '钻展-全店':
+        for i in range(0,len(list)-1):
+            if not datapanduan(changeXlrdTimeToDate(list[i]['时间']), changeXlrdTimeToDate(list[i + 1]['时间'])):
+                return False
+
+            if datapanduan7(changeXlrdTimeToDate(list[0]['时间']), changeXlrdTimeToDate(list[len(list) - 1]['时间'])):
+                return True
+            else:
+                return False
+    elif type == '直通车':
+        for i in range(0, len(list) - 1):
+            if not datapanduan(list[i]['\ufeff日期'],list[i + 1]['\ufeff日期']):
+                return False
+        if datapanduan7(list[0]['\ufeff日期'],list[len(list) - 1]['\ufeff日期']):
+            return True
+        else:
+            return False
+    else:
+        for i in range(0, len(list) - 1):
+            if not datapanduan(list[i]['日期'],list[i + 1]['日期']):
+                return False
+
+        if datapanduan7(list[0]['日期'],list[len(list) - 1]['日期']):
+            return True
+        else:
+            return False
+
+def datapanduan(day0,day1):
+    date1 = time.strptime(day0, "%Y-%m-%d")
+    date2 = time.strptime(day1, "%Y-%m-%d")
+
+    date1 = datetime.datetime(date1[0], date1[1], date1[2])
+    date2 = datetime.datetime(date2[0], date2[1], date2[2])
+
+    if (date2-date1).days <= 1:
+        return True
+    else:
+        return False
+
+def datapanduan7(day0,day1):
+    date1 = time.strptime(day0, "%Y-%m-%d")
+    date2 = time.strptime(day1, "%Y-%m-%d")
+
+    date1 = datetime.datetime(date1[0], date1[1], date1[2])
+    date2 = datetime.datetime(date2[0], date2[1], date2[2])
+
+    if (date2-date1).days == 6:
+        return True
+    else:
+        return False
 
 def getchangetime(mindate, notedata):
     date1 = time.strptime(mindate, "%Y-%m-%d")
