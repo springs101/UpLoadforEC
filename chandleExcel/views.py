@@ -307,10 +307,10 @@ def filter_excel(workbook, type, column_name=0):
 
 def gettypeName(creativeName1, creativeName2={}, creativeName3={}):
     typelist = {
-        '胶原': '姿美堂旗舰店',
+        '胶原蛋白': '姿美堂旗舰店',
         '酵素': '姿美堂旗舰店',
         '益生菌': '姿美堂旗舰店',
-        '奶昔': '姿美堂旗舰店',
+        '代餐奶昔': '姿美堂旗舰店',
         '玛咖': '京姿美堂旗舰店',
         '牡蛎': '京姿美堂旗舰店',
     }
